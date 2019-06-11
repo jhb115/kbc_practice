@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Knowledge Base Completion (kbc)
 This code reproduces results in [Canonical Tensor Decomposition for Knowledge Base Completion](https://arxiv.org/abs/1806.07297) (ICML 2018).
 
@@ -132,3 +133,6 @@ Max Epochs : 100
 
 ## License
 kbc is CC-BY-NC licensed, as found in the LICENSE file.
+=======
+# kbc_practice
+>>>>>>> aabdec35a06fd95dd6abce757eff9c6f20cb7681
