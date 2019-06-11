@@ -10,7 +10,11 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )"
 cd $DIR
 
-wget https://dl.fbaipublicfiles.com/kbc/data.tar.gz
+#For windows use wget
+#wget https://dl.fbaipublicfiles.com/kbc/data.tar.gz
+
+#For mac use curl -O
+curl -O https://dl.fbaipublicfiles.com/kbc/data.tar.gz
 tar -xvzf data.tar.gz
 mv data src_data
 rm data.tar.gz
