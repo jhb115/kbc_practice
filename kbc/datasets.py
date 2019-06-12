@@ -39,6 +39,7 @@ class Dataset(object):
     def get_examples(self, split):
         return self.data[split]
 
+    #This creates dataset that includes additional inverse relation.
     def get_train(self):
         copy = np.copy(self.data['train'])
         tmp = np.copy(copy[:, 0])
@@ -46,6 +47,8 @@ class Dataset(object):
         copy[:, 2] = tmp
         copy[:, 1] += self.n_predicates // 2  # has been multiplied by two.
         return np.vstack((self.data['train'], copy))
+        #For dataset without inverse relation, returns output that is double the size of
+        #the original dataset
 
     def eval(
             self, model: KBCModel, split: str, n_queries: int = -1, missing_eval: str = 'both',

@@ -41,9 +41,9 @@ class KBCModel(nn.Module, ABC):
             chunk_size = self.sizes[2]
         ranks = torch.ones(len(queries))
         with torch.no_grad():
-            c_begin = 0
+            c_begin = 0  # chunk_start_index
             while c_begin < self.sizes[2]:
-                b_begin = 0
+                b_begin = 0  # batch_start_index
                 rhs = self.get_rhs(c_begin, chunk_size)
                 while b_begin < len(queries):
                     these_queries = queries[b_begin:b_begin + batch_size]
@@ -132,6 +132,7 @@ class ComplEx(KBCModel):
         self.embeddings[0].weight.data *= init_size
         self.embeddings[1].weight.data *= init_size
 
+    #Need to understand this
     def score(self, x):
         lhs = self.embeddings[0](x[:, 0])
         rel = self.embeddings[1](x[:, 1])
@@ -165,7 +166,8 @@ class ComplEx(KBCModel):
             torch.sqrt(lhs[0] ** 2 + lhs[1] ** 2),
             torch.sqrt(rel[0] ** 2 + rel[1] ** 2),
             torch.sqrt(rhs[0] ** 2 + rhs[1] ** 2)
-        )
+        )  # The first output is simply Re(e_s*w_r*conjugate(e_o)),
+        # second output is simply magnitude of e_s, w_r, e_o
 
     def get_rhs(self, chunk_begin: int, chunk_size: int):
         return self.embeddings[0].weight.data[

@@ -129,9 +129,6 @@ cur_loss = 0
 curve = {'train': [], 'valid': [], 'test': []}
 for e in range(args.max_epochs):
     cur_loss = optimizer.epoch(examples)
-    print(cur_loss)
-    print(type(cur_loss))
-    break
     if (e + 1) % args.valid == 0:
         valid, test, train = [
             avg_both(*dataset.eval(model, split, -1 if split != 'train' else 50000))
