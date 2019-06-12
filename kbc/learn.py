@@ -86,7 +86,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 dataset = Dataset(args.dataset)
-examples = torch.from_numpy(dataset.get_train().astype('int64'))
+examples = torch.from_numpy(dataset.get_train().astype('int64')).cpu() #changed for cpu
 
 print(dataset.get_shape())
 model = {
@@ -99,7 +99,7 @@ regularizer = {
     'N3': N3(args.reg),
 }[args.regularizer]
 
-device = 'cuda'
+device = 'cpu'
 model.to(device)
 
 optim_method = {
@@ -122,12 +122,16 @@ def avg_both(mrrs: Dict[str, float], hits: Dict[str, torch.FloatTensor]):
     h = (hits['lhs'] + hits['rhs']) / 2.
     return {'MRR': m, 'hits@[1,3,10]': h}
 
+#Run this
+#python kbc/learn.py --dataset 'WN18RR' --model 'ComplEx' --optimizer 'SGD' --batch_size 200
 
 cur_loss = 0
 curve = {'train': [], 'valid': [], 'test': []}
 for e in range(args.max_epochs):
     cur_loss = optimizer.epoch(examples)
-
+    print(cur_loss)
+    print(type(cur_loss))
+    break
     if (e + 1) % args.valid == 0:
         valid, test, train = [
             avg_both(*dataset.eval(model, split, -1 if split != 'train' else 50000))

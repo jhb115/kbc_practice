@@ -52,7 +52,7 @@ class Dataset(object):
             at: Tuple[int] = (1, 3, 10)
     ):
         test = self.get_examples(split)
-        examples = torch.from_numpy(test.astype('int64')).cuda()
+        examples = torch.from_numpy(test.astype('int64')).cpu()#.cuda()
         missing = [missing_eval]
         if missing_eval == 'both':
             missing = ['rhs', 'lhs']
@@ -75,7 +75,7 @@ class Dataset(object):
             hits_at[m] = torch.FloatTensor((list(map(
                 lambda x: torch.mean((ranks <= x).float()).item(),
                 at
-            ))))
+            )))).cpu()
 
         return mean_reciprocal_rank, hits_at
 

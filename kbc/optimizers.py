@@ -14,6 +14,8 @@ from kbc.models import KBCModel
 from kbc.regularizers import Regularizer
 
 
+
+
 class KBCOptimizer(object):
     def __init__(
             self, model: KBCModel, regularizer: Regularizer, optimizer: optim.Optimizer, batch_size: int = 256,
@@ -34,7 +36,7 @@ class KBCOptimizer(object):
             while b_begin < examples.shape[0]:
                 input_batch = actual_examples[
                     b_begin:b_begin + self.batch_size
-                ].cuda()
+                ].cpu()#.cuda() changed for cpu
 
                 predictions, factors = self.model.forward(input_batch)
                 truth = input_batch[:, 2]
