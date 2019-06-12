@@ -95,17 +95,24 @@ class CP(KBCModel):
         self.rhs.weight.data *= init_size
 
     def score(self, x):
-        lhs = self.lhs(x[:, 0])
-        rel = self.rel(x[:, 1])
-        rhs = self.rhs(x[:, 2])
+        lhs = self.lhs(x[:, 0])  # shape = (batch_size x rank)
+        rel = self.rel(x[:, 1])  # shape = (batch_size x rank)
+        rhs = self.rhs(x[:, 2])  # shape = (batch_size x rank)
 
+        # element-wise multiplication -> (batch_size x rank)
         return torch.sum(lhs * rel * rhs, 1, keepdim=True)
+        # sum over the rank at the end
+        # we get (batch_size x 1)
 
     def forward(self, x):
         lhs = self.lhs(x[:, 0])
         rel = self.rel(x[:, 1])
         rhs = self.rhs(x[:, 2])
         return (lhs * rel) @ self.rhs.weight.t(), (lhs, rel, rhs)
+        # (batch_size x rank) x (rank x number_of_unique_entity)
+        # -> (batch_size x number_of_unique_entity)
+        # Why? d(loss)/d(Entity) for KGE. Gradient Descent for this also optimizes relation embedding
+        # In KGE, our aim is to predict entity (we don't predict relation)
 
     def get_rhs(self, chunk_begin: int, chunk_size: int):
         return self.rhs.weight.data[
