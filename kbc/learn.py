@@ -140,6 +140,8 @@ def avg_both(mrrs: Dict[str, float], hits: Dict[str, torch.FloatTensor]):
 
 # Run this
 # python kbc/learn.py --dataset 'WN18RR' --model 'ComplEx' --optimizer 'SGD' --batch_size 200
+# python kbc/learn.py --dataset 'WN18RR' --model 'ConvE'
+
 cur_loss = 0
 curve = {'train': [], 'valid': [], 'test': []}
 for e in range(args.max_epochs):
