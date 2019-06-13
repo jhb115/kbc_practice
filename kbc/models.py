@@ -82,7 +82,7 @@ class KBCModel(nn.Module, ABC):
 class ConvE(KBCModel):
     def __init__(
             self, sizes: Tuple[int, int, int], rank: int,
-            init_size: float=1e-3, dropouts: Tuple[float, float, float] = (0.3, 0.3, 0.3),
+            dropouts: Tuple[float, float, float] = (0.3, 0.3, 0.3),
             use_bias: bool = True
     ):
         super(ConvE, self).__init__()
