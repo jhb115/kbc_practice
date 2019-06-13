@@ -84,24 +84,23 @@ parser.add_argument(
     help="decay rate for second moment estimate in Adam"
 )
 
-#Parser argument for ConvE
-#dropout
+# Parser argument for ConvE
+# dropout
 parser.add_argument(
     '--dropouts', default=(0.3,0.3,0.3), type=tuple,
     help="Dropout rates for each layer in ConvE"
 )
 
-#use_bias
+# Whether to use bias for the ConvE layer
 parser.add_argument(
     '--use_bias', default=True, type=bool,
     help="Using or not using bias for the ConvE layers"
 )
 
-
 args = parser.parse_args()
 
 dataset = Dataset(args.dataset)
-examples = torch.from_numpy(dataset.get_train().astype('int64')).cpu() #changed for cpu
+examples = torch.from_numpy(dataset.get_train().astype('int64')).cpu()  # changed for cpu
 
 print(dataset.get_shape())
 model = {
