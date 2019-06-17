@@ -164,7 +164,7 @@ class ConvE(KBCModel):
         y = F.relu(y)  # f( vec( f([e_s;rel]) ) W )
         y = torch.mm(y, self.emb_e.weight.transpose(1, 0))  # f( vec( f([e_s;rel]) ) W ) e_o
         y += self.b.expand_as(y)
-        y = F.sigmoid(y)
+        y = torch.sigmoid(y)
 
         return y, (lhs, rel, rhs)
 
@@ -315,7 +315,7 @@ class ComplEx(KBCModel):
 
 #shape (40943, 22, 40943)
 
-mymodel = ConvE((40943, 22, 40943), 200)
-train_example = np.array([[ 4858,     4,  4836], [38012,     1,  7677], [13976,     1, 28336]])
-train_example = torch.from_numpy(train_example)
-mymodel.forward(train_example)
+#mymodel = ConvE((40943, 22, 40943), 200)
+#train_example = np.array([[ 4858,     4,  4836], [38012,     1,  7677], [13976,     1, 28336]])
+#train_example = torch.from_numpy(train_example)
+#mymodel.forward(train_example)
