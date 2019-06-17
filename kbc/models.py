@@ -135,7 +135,7 @@ class ConvE(KBCModel):
         y = F.relu(y)  # f(vec(f[e_s; rel] * w) W
         y = y * rhs  # f(vec(f[e_s; rel] * w) W) e_o
         y += self.b.expand_as(y)
-        y = F.sigmoid(y)  # p = sigmoid( psi_r (e_s, e_o) )
+        y = torch.sigmoid(y)  # p = sigmoid( psi_r (e_s, e_o) )
 
         return torch.sum(y, 1, keepdim=True)
 
@@ -143,6 +143,8 @@ class ConvE(KBCModel):
         lhs = self.emb_e(x[:, 0])
         rel = self.emb_rel(x[:, 1])
         rhs = self.emb_e(x[:, 2])
+
+        batch_size = len(x)
 
         e1_embedded = lhs.view(-1, 1, 10, 20)
         rel_embedded = rel.view(-1, 1, 10, 20)
@@ -155,11 +157,12 @@ class ConvE(KBCModel):
         y = self.bn1(y)
         y = F.relu(y)  # f([e_s; rel] * w
         y = self.feature_map_drop(y)  # vec( f([e_s;rel]) )
+        y = y.view(batch_size, -1)
         y = self.fc(y)  # vec( f([e_s;rel]) ) W
         y = self.hidden_drop(y)
         y = self.bn2(y)
         y = F.relu(y)  # f( vec( f([e_s;rel]) ) W )
-        y = torch.mm(y, self.emb_e.weight.transpose(0, 1))  # f( vec( f([e_s;rel]) ) W ) e_o
+        y = torch.mm(y, self.emb_e.weight.transpose(1, 0))  # f( vec( f([e_s;rel]) ) W ) e_o
         y += self.b.expand_as(y)
         y = F.sigmoid(y)
 
@@ -307,3 +310,12 @@ class ComplEx(KBCModel):
             lhs[0] * rel[0] - lhs[1] * rel[1],
             lhs[0] * rel[1] + lhs[1] * rel[0]
         ], 1)
+
+#mymodel = ConvE()
+
+#shape (40943, 22, 40943)
+
+mymodel = ConvE((40943, 22, 40943), 200)
+train_example = np.array([[ 4858,     4,  4836], [38012,     1,  7677], [13976,     1, 28336]])
+train_example = torch.from_numpy(train_example)
+mymodel.forward(train_example)

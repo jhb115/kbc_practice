@@ -56,12 +56,12 @@ parser.add_argument(
     help="Number of epochs before valid."
 )
 parser.add_argument(
-    '--rank', default=1000, type=int,
+    '--rank', default=200, type=int,
     help="Factorization rank."
 )
 parser.add_argument(
     '--batch_size', default=100, type=int,
-    help="Factorization rank."
+    help="batch size."
 )
 parser.add_argument(
     '--reg', default=0, type=float,
@@ -114,8 +114,13 @@ regularizer = {
     'N3': N3(args.reg),
 }[args.regularizer]
 
+print(model.sizes)
+
 device = 'cpu'
 model.to(device)
+
+if args.model == 'ConvE':
+    model.init()
 
 optim_method = {
     'Adagrad': lambda: optim.Adagrad(model.parameters(), lr=args.learning_rate),
@@ -161,3 +166,4 @@ for e in range(args.max_epochs):
 
 results = dataset.eval(model, 'test', -1)
 print("\n\nTEST : ", results)
+
